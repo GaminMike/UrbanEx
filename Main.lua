@@ -16,8 +16,11 @@
 
         ScaleX, ScaleY = width/3840, height/2160
 
+        count = 0
 
+        jump = false
 
+        jumpingup1 = 0
 
         love.mouse.setVisible(false) -- make default mouse invisible
 
@@ -99,7 +102,45 @@
         }
 
 
+
+        player = {
+            {},
+            {},
+            {}
+        }
+        
+        player[1].x, player[1].y = 100, 100
+        player[1].x, player[1].y = 200, 100
+        player[1].x, player[1].y = 300, 100
+
+        playerprejumpy = 0
+
+        playerjumpamount = 1
+
+        function jumpingup()
+            player[1].y = player[1].y - playerjumpamount
+            jumpingup1 = jumpingup1 + playerjumpamount/4
+            --start
+            --fade
+            --end
+        end
+
+
+        function jumpingdown()
+            player[1].y = player[1].y + playerjumpamount
+            jumpingup1 = jumpingup1 + playerjumpamount/4
+        end
+            
+
+
     -- Sets Mouse Icon
+
+        sprites = {
+                g.newImage('Sprites/Player.png')
+        }
+
+
+
         backgrounds = {
             g.newImage('Images/TitleScreen.jpg'),
             g.newImage('Images/Draft.png'),
@@ -160,6 +201,11 @@
             for i = 1, 3, 1 do
                 g.printf({{255/255, 255/255, 255/255, 255/255},  SelectButtonsText[i]}, SelectButtonsCordX, SelectButtonsCord[i].Y, textlimit, "center")
             end
+        end,
+        function()
+            love.graphics.setColor(1, 1, 1)
+            g.draw(backgrounds[scene], 0, 0, 0, ScaleX, ScaleY)
+            love.graphics.draw(sprites[1], player[1].x, player[1].y)
         end
             }
         function SceneSwtichers()
@@ -173,27 +219,71 @@
                         scene = 2
                     end
                 end
-                if 0 < tonumber(key) and tonumber(key) < 10 then
-                    scene = tonumber(key)
+                for i = 1, 9, 1 do
+                    if key == tostring(i) then
+                        scene = i
+                    end
                 end
             end
             function love.mousepressed(x, y, button, istouch)
-                if scene ~= 1 and button ~= 1 then return end
+                if scene == 1 and button == 1 then
                     scene = 2
+                end
+            end
+
+        end
+        
+
+        function PlayerMovement()
+            if jump == true then
+                if jumpingup1 < 20 then
+                    jumpingup()
+                    print(jumpingup1)
+                end
+                if jumpingup1 >= 20 then
+                    jumpingdown()
+                    print(jumpingup1)
+                end
+                if jumpingup1 > 40 then
+                    jump = false
+                    jumpingup1 = 0
+                    print(jumpingup1)
+                end
+            end
+            if love.keyboard.isDown("w") then 
+                player[1].y = player[1].y - .5
+            end
+            if love.keyboard.isDown("s") then
+                player[1].y = player[1].y + .5
+            end
+            if love.keyboard.isDown("a") then
+                player[1].x = player[1].x - .5
+            end
+            if love.keyboard.isDown("d") then
+                player[1].x = player[1].x + .5
+            end
+            if count == 1 then
+                player[1].y = player[1].y + 20
+                count = 0
+            end
+            function love.keyreleased(key)
+                if key == "space" then
+                    jump = true
+                end
             end
         end
-
-
         function CustomMouse()
             love.graphics.setColor(1, 1, 1)
             local x, y = love.mouse.getPosition() -- get the position of the mouse
             love.graphics.draw(cursor, x, y) -- draw the custom mouse image
         end
-
     end
 
     function love.update(dt)
         SceneSwtichers()
+        if scene == 3 then
+            PlayerMovement()
+        end
     end
 
 
