@@ -150,9 +150,6 @@ local finishLineReached = false
             jumpingup1 = jumpingup1 + playerjumpamount/4
         end
             
-        levels = {
-            nil
-        }
 
         obstacles = {
             {},
@@ -182,9 +179,9 @@ local finishLineReached = false
  ---- colisionb shuit
 
 
- xtouching = false
- ytouching = false
- touching = ""
+        xtouching = false
+        ytouching = false
+        touching = ""
 
 
 
